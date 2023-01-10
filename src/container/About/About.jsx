@@ -1,0 +1,64 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from "framer-motion";
+import { images } from "../../constants"
+
+import { AppWrap, MotionWrap } from "../../wrapper"
+import "./About.scss";
+import {urlFor, client } from "../../client";
+
+const About = () => {
+
+  const [abouts, setAbouts] = useState([]);
+
+  useEffect(() => {
+    const query = '*[_type == "abouts"]';
+
+    client.fetch(query).then((data) => {
+      setAbouts(data);
+    });
+  }, []);
+
+  return (
+    <>
+      <h2 className="head-text">
+          ¡Todos Pueden Ser
+          <span> Políglotas</span>
+          <br />
+          En Tan Solo
+          <span> 3 Meses!</span>
+        </h2>
+        <div className="app__profiles">
+        <motion.div
+              whileInView={{ opacity: 1 }}
+              whileHover={{ scale:1.1 }}
+              transition={{ duration: 0.5, type: "tween" }}
+              className="app__profile-item"
+              key="Imagen Personal"
+            >
+              <img src={images.personalImage} alt="Imagen Personal" />
+              <h2 className="bold-text" style={{ marginTop: 20 }}>Imagen Personal</h2>
+              <p className="p-text" style={{ marginTop: 10 }}>¡Tú sabes que necesitas otro idioma! ¡No más excusas! Solo necesitas decir: <br/> <a href="#contáctanos">¡Si!</a></p>
+            </motion.div>
+          {abouts.map((about, index)=>(
+            <motion.div
+              whileInView={{ opacity: 1 }}
+              whileHover={{ scale:1.1 }}
+              transition={{ duration: 0.5, type: "tween" }}
+              className="app__profile-item"
+              key={about.title + index}
+            >
+              <img src={urlFor(about.imgUrl)} alt={about.title} />
+              <h2 className="bold-text" style={{ marginTop: 20 }}>{about.title}</h2>
+              <p className="p-text" style={{ marginTop: 10 }}>{about.description}</p>
+            </motion.div>
+          ))}
+        </div>
+    </>
+  )
+}
+
+export default AppWrap(
+  MotionWrap(About, "app__about"), 
+  "información",
+  "app__whitebg"
+);
